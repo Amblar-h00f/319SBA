@@ -1,22 +1,18 @@
 import dotenv from 'dotenv';
-import {MongoClient} from 'mongodb';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
-const connectionString = process.env.mongoURI;
+const connectionStr = process.env.mongoURI || 'mongodb://localhost:27017/ShellySells';
 
-const client = new MongoClient
-(connectionString);
-let conn;
+async function connectDB() {
+    try {
+        await mongoose.connect(connectionStr);
 
-try{
-    conn = await client.connect();
-
-    console.log('MongoDB Connected')
-
-}catch(err) {
-    console.error(err);
+console.log('MongoDB Connected')
+    }catch (error) {
+        console.error(err);
+    }
 }
-let db = conn.db('ShellySells');
+export default connectDB;
 
-export default db;
