@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const shellSchema = new mongoose. Schema({
+const shellSchema = new mongoose.Schema({
 
     name: {
         type: String,
