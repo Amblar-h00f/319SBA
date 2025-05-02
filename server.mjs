@@ -1,4 +1,5 @@
 //Imports
+import mongoose from 'mongoose';
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from'./db/conn.mjs';
@@ -11,6 +12,11 @@ import cors from 'cors';
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+mongoose.connect(process.env.mongoURI)
+.then(() => console.log("Connected to MongoDB"))
+.catch(err => console.error("Connection failed:", err));
+
 
 //Middlewares
 app.use(express.json());

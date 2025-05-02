@@ -5,12 +5,23 @@ const router = express.Router();
 
 /// create a new seashell
 router.post('/', async (req, res) => {
-
+    try { 
+        const newShell = await Shell.create(req.body);
+        res.status(201).json(newShell);
+    } catch (error) {
+        res.status(400).json({
+            error: error.message,
+            validationErrors: error.errors
+        })
+    }
+});
     const newShell = await Shell.create(req.body);
 
     //return results
     res.json(newShell);
-});
+
+
+}
 
 //read
 router.get('/', async (req, res) => {

@@ -8,19 +8,27 @@ const shellSchema = new mongoose.Schema({
     },
     scientific_name: {
         type: String,
-        required: true,
+        index: {
+            unique: true,
+            collation: {locale: 'en', strength: 2}
+        }
     },
     location_found: {
-        typer: String,
-        required: true,
+        type: String,
+        index: true
     },
     color: {
         type: String,
-        required: true,
+        enum: ['white', 'brown', 'striped', 'spotted'],
+        required: true
     },
     habitat: {
         type: String,
-        required: true,
+        validate: { 
+            validator: v => ['rocky', 'sandy', 'corral'].includes(v),
+            message: props => `${props.value} is not a valid habitat`
+        }
+        
     }
 });
 
