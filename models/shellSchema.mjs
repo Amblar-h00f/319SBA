@@ -26,10 +26,18 @@ const shellSchema = new mongoose.Schema({
         type: String,
         validate: { 
             validator: v => ['rocky', 'sandy', 'corral'].includes(v),
-            message: props => `${props.value} is not a valid habitat`
+            message: props => `${props.value} is not a valid habitat. Valid options are: rocky, sandy, corral.`
         }
-        
-    }
-});
+      }
+    },{ timestamps: true });
+
+    shellSchema.post('save', function(doc) {
+      console.log('Shell saved:', doc);
+    });
+    
+    shellSchema.post('validate', function(doc) {
+      console.log('Shell validated:', doc);
+    });
+
 
 export default mongoose.model('Shell', shellSchema);

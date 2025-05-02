@@ -3,7 +3,7 @@ import Shell from '../models/seashellModel.mjs';
 
 const router = express.Router();
 
-/// create a new seashell
+// Create a new seashell
 router.post('/', async (req, res) => {
     try { 
         const newShell = await Shell.create(req.body);
@@ -12,48 +12,52 @@ router.post('/', async (req, res) => {
         res.status(400).json({
             error: error.message,
             validationErrors: error.errors
-        })
+        });
     }
 });
-    const newShell = await Shell.create(req.body);
 
-    //return results
-    res.json(newShell);
-
-
-}
-
-//read
+// Read all seashells
 router.get('/', async (req, res) => {
-    const allShell = await Shell.find({});
-
-    //return results
-    res.json(allShell);
+    try {
+        const allShell = await Shell.find({});
+        res.json(allShell);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
-//Update
+// Update a seashell
 router.put('/:id', async (req, res) => {
+    try {
+        const editShell = await Shell.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
 
-    const editShell = await Shell.findByIDandUpdate
-    (req.params.id, req.body, { new: true, });
+        if (!editShell) {
+            return res.status(404).json({ msg: 'Shell not found' });
+        }
+
+        res.json(editShell);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 });
 
-if (!editShell) res.status(400).json({ msg: 'Shell not found' });
+// Delete a seashell
+router.delete('/:id', async (req, res) => {
+    try {
+        const deleteShell = await Shell.findByIdAndDelete(req.params.id);
 
-res.json(editShell);
+        if (!deleteShell) {
+            return res.status(404).json({ msg: 'Shell not found' });
+        }
 
-//delete
-
-router.delete('/:id', async (req, res) => { 
-    //Specify Action
-    const deleteShell = await Shell.findByIdAndDelete(req.params.id);
-
-    if (!deleteShell) res.status(400).json({ msg: 'Shell not found'});
-
-    res.json(deleteShell);
+        res.json(deleteShell);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
-
 
 export default router;
-
-

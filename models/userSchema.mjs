@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 const userSchema = new mongoose.Schema({
     username: {
         type: String, 
@@ -8,8 +10,25 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-            'Invalid email']
+        unique: true,
+        validate: {
+            validator: (v) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(v),
+            message: (props) => `${props.value} is not a valid email address!`
+        }
+    },
+    password: {
+        type: String,
+        required: true,
+        minlength: 6
     }
-}, {timestamps: true});
+}, { timestamps: true });
 
+userSchema.post('save', function(doc) {
+    console.log('User saved:', doc);
+});
+
+userSchema.post('validate', function(doc) {
+    console.log('User validated:', doc);
+});
+
+export default mongoose.model('User', userSchema);
